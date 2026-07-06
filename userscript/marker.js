@@ -2,7 +2,7 @@
 // @name        Marker - A bookmark client
 // @namespace   Violentmonkey Scripts
 // @icon        data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZvbGRlci1ib29rbWFyay1pY29uIGx1Y2lkZS1mb2xkZXItYm9va21hcmsiPjxwYXRoIGQ9Ik0xMiA2djhsMy0zIDMgM1Y2Ii8+PHBhdGggZD0iTTIwIDIwYTIgMiAwIDAgMCAyLTJWOGEyIDIgMCAwIDAtMi0yaC03LjlhMiAyIDAgMCAxLTEuNjktLjlMOS42IDMuOUEyIDIgMCAwIDAgNy45MyAzSDRhMiAyIDAgMCAwLTIgMnYxM2EyIDIgMCAwIDAgMiAyeiIvPjwvc3ZnPg==
-// @version     1.0.0
+// @version     1.0.1
 //
 // @match       *://*/*
 // @grant       GM_xmlhttpRequest
