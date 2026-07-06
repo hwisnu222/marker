@@ -102,7 +102,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let middleware = tower::ServiceBuilder::new().layer(cors_layer);
 
 
-    let addr = SocketAddr::from(([127,0,0,1], 6644));
+    let addr = SocketAddr::from(([0,0,0,0], 6644));
     let server = Server::builder()
         .set_http_middleware(middleware)
         .build(addr)
