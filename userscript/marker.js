@@ -2,7 +2,7 @@
 // @name        Marker - A bookmark client
 // @namespace   Violentmonkey Scripts
 // @icon        data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZvbGRlci1ib29rbWFyay1pY29uIGx1Y2lkZS1mb2xkZXItYm9va21hcmsiPjxwYXRoIGQ9Ik0xMiA2djhsMy0zIDMgM1Y2Ii8+PHBhdGggZD0iTTIwIDIwYTIgMiAwIDAgMCAyLTJWOGEyIDIgMCAwIDAtMi0yaC03LjlhMiAyIDAgMCAxLTEuNjktLjlMOS42IDMuOUEyIDIgMCAwIDAgNy45MyAzSDRhMiAyIDAgMCAwLTIgMnYxM2EyIDIgMCAwIDAgMiAyeiIvPjwvc3ZnPg==
-// @version     1.0.1
+// @version     1.0.2
 //
 // @match       *://*/*
 // @grant       GM_xmlhttpRequest
@@ -13,6 +13,10 @@
 // ==/UserScript==
 
 (function () {
+  const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
+  const errorIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
+  const bookmarkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/></svg>`;
+
   const addButton = (obs) => {
     const target = document.querySelector(".container-marker");
     if (!target) {
@@ -30,7 +34,7 @@
       container.style.zIndex = 1000;
 
       let button = document.createElement("button");
-      button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/></svg>`;
+      button.innerHTML = bookmarkIcon;
       button.style.padding = "0.8em";
       button.style.background = "#000000";
       button.style.color = "#ffffff";
@@ -58,7 +62,7 @@
 
         GM_xmlhttpRequest({
           method: "POST",
-          url: "http://armbian.local:6644",
+          url: "http://127.0.0.1:6644",
           headers: {
             "Content-Type": "application/json",
           },
@@ -69,29 +73,21 @@
               console.log(data);
 
               if (data?.error) {
-                GM_notification({
-                  title: "Error",
-                  text: data.error.message,
-                });
+                button.innerHTML = errorIcon;
                 return;
               }
 
-              GM_notification({
-                title: "Success",
-                text: data.result.message,
-              });
+              button.innerHTML = successIcon;
             } catch (data) {
-              GM_notification({
-                title: "Error",
-                text: "can't parse response",
-              });
+              alert("can't parse response");
+            } finally {
+              setTimeout(() => {
+                button.innerHTML = bookmarkIcon;
+              }, 2000);
             }
           },
           onerror: (res) => {
-            GM_notification({
-              title: "Error",
-              text: "can't connect to bookmark server",
-            });
+            alert("can't connect to bookmark server");
           },
         });
       });
