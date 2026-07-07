@@ -30,8 +30,6 @@ trait RpcApi {
 
     #[method(name="delete_url")]
     fn delete_url(&self, id: String) -> Result<Response, ErrorObjectOwned>;
-
-
 }
 
 struct RpcImplent{
@@ -72,10 +70,20 @@ impl RpcApiServer for RpcImplent{
         }
     }
 
-    fn delete_url(&self,id:String) -> Result<Response,ErrorObjectOwned> {
-        Ok(Response{
-            message: format!("success delete id: {}", id)
-        })
+    fn delete_url(&self,id:String) -> Result<Response, ErrorObjectOwned> {
+        match self.bookmark_repo.delete(id){
+            Ok(message)=>{
+                let res = Response{
+                    message
+                };
+                Ok(res)
+            }
+            Err(e)=>{
+                eprintln!("Error: {}", e);
+                let err = ErrorObjectOwned::owned(-1, "failed delete bookmark", None::<()>);
+                Err(err)
+            }
+        }
     }
 }
 
