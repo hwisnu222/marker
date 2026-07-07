@@ -5,6 +5,7 @@ use rusqlite::{Connection};
 use serde::Serialize;
 use tower_http::cors::{Any, CorsLayer};
 use hyper::Method;
+use tracing::{info, error};
 
 use crate::repository::{Bookmark, BookmarkRepository};
 
@@ -51,7 +52,7 @@ impl RpcApiServer for RpcImplent{
                 Ok(res)
             }
             Err(e)=> {
-                eprintln!("Error: {}", e);
+                error!(e);
                 let err = ErrorObjectOwned::owned(-1, "failed add url", None::<()>);
                 Err(err)
             }
@@ -64,7 +65,7 @@ impl RpcApiServer for RpcImplent{
                 Ok(data)
             }
             Err(e )=>{
-                eprintln!("Error: {}", e);
+                error!(e);
                 Err(ErrorObjectOwned::owned(-1, "failed get bookmarks", None::<()>))
             }
         }
@@ -79,7 +80,7 @@ impl RpcApiServer for RpcImplent{
                 Ok(res)
             }
             Err(e)=>{
-                eprintln!("Error: {}", e);
+                error!(e);
                 let err = ErrorObjectOwned::owned(-1, "failed delete bookmark", None::<()>);
                 Err(err)
             }
@@ -89,6 +90,7 @@ impl RpcApiServer for RpcImplent{
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    tracing_subscriber::fmt::init();
     let conn = Connection::open("bookmark.db")?;
 
     let sql = "CREATE TABLE IF NOT EXISTS bookmark (
@@ -124,7 +126,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     }.into_rpc();
 
     let handle = server.start(module);
-    println!("server starting at {}", addr);
+    info!("server starting at {}", addr);
     handle.stopped().await;
     Ok(())
 }

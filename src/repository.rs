@@ -2,6 +2,7 @@ use std::{error::Error, sync::{Arc, Mutex}};
 
 use rusqlite::{Connection, Result};
 use serde::Serialize;
+use tracing::{error};
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Bookmark{
@@ -34,9 +35,8 @@ impl BookmarkRepository{
         }).map_err(|e| e.to_string())?;
 
         let bookmarks = bookmark_iter.collect::<Result<Vec<Bookmark>, rusqlite::Error>>()?;
-
+        
         Ok(bookmarks)
-
     }
 
     pub fn add(&self, title: String, url: String)-> Result<String, Box<dyn Error>>{
@@ -49,7 +49,7 @@ impl BookmarkRepository{
             }
 
             Err(e)=>{
-                eprintln!("Error: {}", e);
+                error!("{}", e.to_string());
                 Err("failed add url to bookmark".into())
             }
         }
@@ -66,7 +66,7 @@ impl BookmarkRepository{
                 Ok("success delete bookmark".to_string())
             }
             Err(e)=>{
-                eprintln!("Error: {}", e);
+                error!("{}", e.to_string());
                 Err("failed delete bookmark".into())
             }
         }
